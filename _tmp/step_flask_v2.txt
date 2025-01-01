@@ -1,0 +1,14 @@
+1) start/stop jenkins jobs from UI or telegram api
+  -> Status of Jenkins jobs in UI
+  -> Version of dbCAR prod/uat in UI
+2) loging all things in UI
+3) find errors and analising logs from db  + execute script with errors from ui ( add form for result ) + form for execute scripts manualy
+4) analis of invalid objects
+4) deploy next CD and re-deploy current if find errors
+5)  start/stop db jobs+sheduler from UI
+
+additional
+status of web-services in UI and start/stop weblogic
+
+-> Flask Socket
+pip install flask-socketio

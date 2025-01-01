@@ -1,0 +1,60 @@
+1. sudo yum install python-virtualenv
+2. virtualenv venv
+3. source venv/bin/activate
+4. pip install flask
+ -> Run Flas with 0.0.0.0 IP (app.run(host='0.0.0.0',port = 5000))
+5. Install flask-sslify for HTTPS
+ -> pip install flask-sslify
+ -pip freeze
+6. pip install requests
+7. check ->locale
+8. tunel - http://localhost.run/
+    ssh -R 80:0.0.0.0:5000 -p 2222 ssh.localhost.run
+9. tunel - https://ngrok.com/
+    wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+    sudo yum install unzip
+    unzip ngrok-stable-linux-amd64.zip -d ngrok
+    ./ngrok http 5000 -> https
+10. webhook -> setWebhook?url=https://
+11. https://pythex.org/ regular expression
+      /\w+
+      import re
+      def parc_text(text)
+          pattern = r'/\w+''
+          crypto = re.search(pattern,text).group()
+          return crypto[1:] # выводс со второго символа
+12. #priny(get_price(parc_text('сколько стоит /bitcoin?')))
+     curl -u miguel:python -i http://localhost:5000/todo/api/v1.0/tasks
+13. login template from codepen.io.
+
+ *** www.pythonanywhere.com
+
+ 1. install virtualenv and all modueles+app in console
+ 2. Conf a WEB app
+  -> Source code:
+  -> WSGI configuration file (FLASK) :
+    import sys
+
+    path = '/home/vorovik/python_bot'
+
+    if path not in sys.path:
+    sys.path.append(path)
+
+    from main import app as application
+  -> Virtualenv:
+
+
+  '''
+        connection = mysql.connector.connect(
+            user='vorovik', password='cb.,fq12-',
+            host='0.0.0.0', port=tunnel.local_bind_port,
+            database='vorovik$vorovikapp',
+
+        )
+    '''
+wget https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+    sudo rpm -ivh mysql57-community-release-el7-9.noarch.rpm
+  sudo yum install gcc
+  sudo yum install python-devel
+  sudo yum install mysql-devel
+sudo pip install flask-mysqldb

@@ -1,0 +1,102 @@
+{% extends 'layout1.html' %}
+
+{% block body %}
+
+  <div class ="jumbotron text-center">
+    <h1>Welcome</h1>
+    </div>
+  <hr>
+  {% include 'includes/_navbarpymongo.html' %}
+  <table class="table table-striped" id="dtypes">
+  <thead>
+    <tr>
+      {% for article in articles[0] %}
+          <th>{{article}}</th>
+      {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for article in articles %}
+      <tr>
+        <td>{{article.id}}</td>
+        <td>{{article.title}}</td>
+        <td>{{article.cost}}</td>
+        <td>{{article.year}}</td>
+        <td>{{article.month}}</td>
+        <td>{{article.register_date}}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+<script src="{{ url_for('static', filename='tablefilter/tablefilter.js')}}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablefilter/style/tablefilter.css')}}">
+
+  <div id="filtersToggle"></div>
+
+  <script data-config>
+
+  // Form submission logic for filtering the table
+      function filter(evt){
+          var frm = document.forms[0];
+          var slc = frm.slcColumns;
+          var inp = frm.inpSearch;
+
+          // Set the column's filter value
+          tf.setFilterValue(slc.value, inp.value);
+
+          // Filter the table
+          tf.filter();
+
+          // Prevent form submission
+          evt.preventDefault();
+      }
+
+  var tfConfig = {
+    base_path: 'static/tablefilter/',
+    state: {
+      types: ['hash'],
+      filters: true,
+      page_number: true,
+      page_length: true,
+      sort: true
+    },
+    paging: {
+      results_per_page: ['Records: ', [10,25,50,100]]
+    },
+    alternate_rows: true,
+    btn_reset: true,
+    rows_counter: true,
+    loader: true,
+    status_bar: true,
+    col_6: 'select',
+            col_widths: [
+                '75px', '150px', '150px',
+                '70px', '230px', '70px'
+            ],
+
+    no_results_message: true,
+    grid_layout: {
+          width: '101%',
+          height: '450px'
+      },
+    // columns data types
+    col_types: [
+        'string',
+        'string',
+        'string',
+        'string',
+        'string',
+        'string'
+    ],
+    themes: [{ name: 'skyblue'}],
+    extensions: [{
+            name: 'sort',
+        }]
+};
+var tf = new TableFilter('dtypes', tfConfig);
+tf.init();
+
+  </script>
+{% endblock %}

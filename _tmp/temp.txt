@@ -1,0 +1,31 @@
+Первая%20строка.%0AВторая%20строка.
+
+"Первая строка. \nВторая строка."
+
+INSERT INTO limit_dict(limit_czk_value)
+VALUES('Learn MySQL INSERT Statement',1);
+
+ALTER TABLE limit_dict
+ADD COLUMN limit_czk_value INT NOT NULL;
+
+
+UPDATE limit_dict SET limit_czk_value=limit_value/2.7;
+
+
+SELECT sum(cost) as summa FROM costs where year=(Select Year(CURDATE())) and month=(select month(CURDATE())) and title !='кредит';
+SELECT * FROM costs where year=(Select Year(CURDATE())) and month=(select month(CURDATE()))-1 and title !='кредит';
+
+Delete from costs where year=(Select Year(CURDATE())) and month=(select month(CURDATE())) and title !='кредит' and id=570;
+
+SELECT title,limits FROM costs where year=(Select Year(CURDATE())) and month=(select month(CURDATE())) and title !='кредит';
+
+
+
+
+
+
+https://api.telegram.org/bot{token}/sendMessage?chat_id=488735610&text=%27test%27
+https://api.telegram.org/bot{token}/getupdates
+https://api.telegram.org/bot{token}/deleteWebhook
+https://api.telegram.org/bot{token}/setWebhook?url=https://vorovik.pythonanywhere.com/webhooks_test/
+https://api.telegram.org/bot{token}/setWebhook?url=https://vorovik.pythonanywhere.com/webhooks/

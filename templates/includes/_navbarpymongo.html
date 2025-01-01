@@ -1,0 +1,26 @@
+<div data-config="">
+    <div class="navbar navbar-light bg-light navbar-expand-sm">
+        <form class="form-inline " onsubmit="filter(event);">
+            <div class="form-group">
+                <label for="slcColumns">Column:</label>
+                <select id="slcColumns" name="slcColumns" class="form-control">
+                  <option value="0">id</option>
+
+                  <option value="1">title</option>
+              
+                  <option value="2">cost</option>
+
+                  <option value="3">year</option>
+
+                  <option value="4">month</option>
+
+                  <option value="5">register_date</option>
+
+                </select>
+                <input name="inpSearch" type="text" class="form-control" placeholder="Search">
+                <button type="submit" class="btn btn-secondary">Filter</button>
+                <button type="reset" class="btn btn-link" onclick="tf.clearFilters();">Clear</button>
+            </div>
+        </form>
+    </div>
+</div>

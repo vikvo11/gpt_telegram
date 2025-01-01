@@ -1,0 +1,28 @@
+CREATE TABLE costs(id INT(11) AUTO_INCREMENT PRIMARY KEY, title VARCHAR(200), cost INT(10), year INT(10) DEFAULT 2018, month INT(10) DEFAULT 0, register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+truncate costs;
+
+Select date_format(CURDATE(),' ','%Y %m');
+
+Select Year(CURDATE());
+select month(CURDATE());
+
+select *,(Select Year(CURDATE())) from costs;
+INSERT INTO costs(title,cost,year,month) VALUES('title',100,(Select Year(CURDATE())),(select month(CURDATE())));
+INSERT INTO costs(title,cost,year,month) VALUES('title',100,(Select Year(CURDATE())),(select month(CURDATE())+4));
+
+SELECT * FROM {} where title=%s and year=(Select Year(CURDATE())) and month=(select month(CURDATE()))
+UPDATE costs SET cost=cost+100 where title='test123' and year=(Select Year(CURDATE())) and month=(select month(CURDATE()))
+
+CREATE TRIGGER ins_year
+BEFORE INSERT ON tableNAME
+    FOR EACH ROW SET NEW.year = YEAR(NOW());
+
+
+    usern=' users'
+      username='3'
+      # Get articles
+      #result = cur.execute("SELECT * FROM %s",(art))
+      #result = cur.execute("SELECT * FROM articles")
+      result = cur.execute("SELECT * FROM {} WHERE id=%s".format('articles'),[username])
+
+  pip install pytelegrambotapi

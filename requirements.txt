@@ -1,0 +1,7 @@
+Flask
+flask-mysqldb
+flask-sslify
+requests
+pyTelegramBotAPI
+pymongo
+sqlite3
