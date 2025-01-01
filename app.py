@@ -6,6 +6,7 @@ import json
 
 # Импортируем blueprint из api_costs
 from api_costs import api_bp
+from api_limits import api_limits_bp  # <-- Импортируем ваш новый Blueprint
 
 from flask import (
     Flask,
@@ -74,6 +75,7 @@ if not common_db.is_mysql:
 
 # После создания объекта `app = Flask(__name__)` регистрируем Blueprint:
 app.register_blueprint(api_bp, url_prefix='/api')
+app.register_blueprint(api_limits_bp, url_prefix='/api')
 
 # Проверяем, какой движок используем
 is_mysql = (db_engine.lower() == 'mysql')
