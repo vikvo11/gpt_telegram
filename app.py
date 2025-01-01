@@ -33,6 +33,7 @@ from misck import token, chat_id_old
 # Подключаем нашу инициализацию
 import db_init  # модуль инициализации таблиц для SQLite
 import common_db  # <-- импортируем наш общий модуль
+from common_db import is_mysql, mysql
 
 # ----------------------------------------------------
 # Для MySQL
@@ -58,32 +59,32 @@ app.config['SECRET_KEY'] = 'morkovka18'
 app.debug = True
 sslify = SSLify(app)
 
-#Config mysql
-app.config['MYSQL_HOST']='vorovik.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER']='vorovik'
-app.config['MYSQL_PASSWORD']='cb.,fq12-'
-app.config['MYSQL_DB']='vorovik$vorovikapp'
-app.config['MYSQL_CURSORCLASS']='DictCursor'
-#init MySQL
-mysql=MySQL(app)
+# #Config mysql
+# app.config['MYSQL_HOST']='vorovik.mysql.pythonanywhere-services.com'
+# app.config['MYSQL_USER']='vorovik'
+# app.config['MYSQL_PASSWORD']='cb.,fq12-'
+# app.config['MYSQL_DB']='vorovik$vorovikapp'
+# app.config['MYSQL_CURSORCLASS']='DictCursor'
+# #init MySQL
+# mysql=MySQL(app)
 
 # Выбираем движок БД
 #  'mysql' или 'sqlite'
 # ----------------------------------------------------
-# db_engine = 'mysql'
-db_engine = 'sqlite'
-is_mysql = False
+db_engine = 'mysql'
+# db_engine = 'sqlite'
+# is_mysql = False
 # Проверяем, какой движок используемs
 # is_mysql = (db_engine.lower() == 'mysql')
 # ----------------------------------------------------
 
 # Инициализируем движок
-# common_db.init_app(db_engine,app)
+common_db.init_app(db_engine,app)
 
 
 # Если выбрали SQLite, создаём таблицы (если их нет)
-# if not common_db.is_mysql:
-if not is_mysql:
+if not common_db.is_mysql:
+# if not is_mysql:
     print('SQL LITE')
     db_init.init_sqlite()
 
