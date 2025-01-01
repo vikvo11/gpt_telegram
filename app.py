@@ -58,14 +58,14 @@ app.config['SECRET_KEY'] = 'morkovka18'
 app.debug = True
 sslify = SSLify(app)
 
-# #Config mysql
-# app.config['MYSQL_HOST']='vorovik.mysql.pythonanywhere-services.com'
-# app.config['MYSQL_USER']='vorovik'
-# app.config['MYSQL_PASSWORD']='cb.,fq12-'
-# app.config['MYSQL_DB']='vorovik$vorovikapp'
-# app.config['MYSQL_CURSORCLASS']='DictCursor'
-# #init MySQL
-# mysql=MySQL(app)
+#Config mysql
+app.config['MYSQL_HOST']='vorovik.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER']='vorovik'
+app.config['MYSQL_PASSWORD']='cb.,fq12-'
+app.config['MYSQL_DB']='vorovik$vorovikapp'
+app.config['MYSQL_CURSORCLASS']='DictCursor'
+#init MySQL
+mysql=MySQL(app)
 
 # Выбираем движок БД
 #  'mysql' или 'sqlite'
@@ -73,6 +73,8 @@ sslify = SSLify(app)
 db_engine = 'mysql'
 # db_engine = 'sqlite'
 
+# Проверяем, какой движок используемs
+is_mysql = (db_engine.lower() == 'mysql')
 # ----------------------------------------------------
 
 # Инициализируем движок
@@ -96,8 +98,7 @@ if not common_db.is_mysql:
 app.register_blueprint(api_bp, url_prefix='/api')
 app.register_blueprint(api_limits_bp, url_prefix='/api')
 
-# Проверяем, какой движок используем
-is_mysql = (db_engine.lower() == 'mysql')
+
 
 
 global last_msg
@@ -578,10 +579,10 @@ def update_costs(table, title, cost):
 def main():
     pass
 
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5005, debug=True)
-
-
 if __name__ == '__main__':
-    #bot.polling(none_stop=True)
-    main()
+    app.run(host='0.0.0.0', port=5005, debug=True)
+
+
+# if __name__ == '__main__':
+#     #bot.polling(none_stop=True)
+#     main()
