@@ -63,10 +63,7 @@ sslify = SSLify(app)
 # ----------------------------------------------------
 db_engine = 'mysql'
 # db_engine = 'sqlite'
-if db_engine == "mysql":
-        
-        mysql = MySQL(app)
-        print("Используем MySQL.")
+
 # ----------------------------------------------------
 
 # Инициализируем движок
@@ -77,6 +74,9 @@ common_db.init_app(db_engine,app)
 if not common_db.is_mysql:
     db_init.init_sqlite()
 
+if db_engine == "mysql":      
+        mysql = MySQL(app)
+        print("Используем MySQL.")
 # После создания объекта `app = Flask(__name__)` регистрируем Blueprint:
 app.register_blueprint(api_bp, url_prefix='/api')
 app.register_blueprint(api_limits_bp, url_prefix='/api')
