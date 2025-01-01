@@ -5,8 +5,8 @@ import json
 #from bson import json_util
 
 # Импортируем blueprint из api_costs
-from api_costs import api_bp
-from api_limits import api_limits_bp  # <-- Импортируем ваш новый Blueprint
+# from api_costs import api_bp
+# from api_limits import api_limits_bp  # <-- Импортируем ваш новый Blueprint
 
 from flask import (
     Flask,
@@ -70,19 +70,21 @@ mysql=MySQL(app)
 # Выбираем движок БД
 #  'mysql' или 'sqlite'
 # ----------------------------------------------------
-db_engine = 'mysql'
-# db_engine = 'sqlite'
-
+# db_engine = 'mysql'
+db_engine = 'sqlite'
+is_mysql = False
 # Проверяем, какой движок используемs
-is_mysql = (db_engine.lower() == 'mysql')
+# is_mysql = (db_engine.lower() == 'mysql')
 # ----------------------------------------------------
 
 # Инициализируем движок
-common_db.init_app(db_engine,app)
+# common_db.init_app(db_engine,app)
 
 
 # Если выбрали SQLite, создаём таблицы (если их нет)
-if not common_db.is_mysql:
+# if not common_db.is_mysql:
+if not is_mysql:
+    print('SQL LITE')
     db_init.init_sqlite()
 
 # if db_engine == "mysql": 
@@ -95,8 +97,8 @@ if not common_db.is_mysql:
 #         mysql = MySQL(app)
 #         print("Используем MySQL.")
 # После создания объекта `app = Flask(__name__)` регистрируем Blueprint:
-app.register_blueprint(api_bp, url_prefix='/api')
-app.register_blueprint(api_limits_bp, url_prefix='/api')
+# app.register_blueprint(api_bp, url_prefix='/api')
+# app.register_blueprint(api_limits_bp, url_prefix='/api')
 
 
 
