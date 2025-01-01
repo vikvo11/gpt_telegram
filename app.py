@@ -559,10 +559,10 @@ def update_costs(table, title, cost):
 def main():
     pass
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5005, debug=True)
-
-
 # if __name__ == '__main__':
-#     #bot.polling(none_stop=True)
-#     main()
+#     app.run(host='0.0.0.0', port=5005, debug=True)
+
+
+if __name__ == '__main__':
+    #bot.polling(none_stop=True)
+    main()
