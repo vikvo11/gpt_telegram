@@ -16,6 +16,7 @@ api_limits_bp = Blueprint('api_limits_bp', __name__)
 
 # Для простоты берём тот же подход с API Key, как в предыдущих примерах
 MY_SECRET_API_KEY = "MY_SUPER_SECRET_KEY_123"
+# mysql = common_db.mysql
 
 def check_api_key():
     """
@@ -60,7 +61,7 @@ def calculate_limits_sum():
 
         conn.close()
     else:
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT COALESCE(SUM(limit_value),0) as sum_others FROM limit_dict WHERE title != %s", ("общий",))
         sum_others = cur.fetchone()["sum_others"]
 
@@ -98,7 +99,7 @@ def ensure_total_not_less_than(sum_others):
         conn.close()
 
     else:
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM limit_dict WHERE title=%s", ("общий",))
         row = cur.fetchone()
         if row:
@@ -131,7 +132,7 @@ def get_all_limits():
         rows = cur.fetchall()
         conn.close()
     else:
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM limit_dict")
         rows = cur.fetchall()
         cur.close()
@@ -229,7 +230,7 @@ def upsert_limit():
 
     else:
         # MySQL
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM limit_dict WHERE title=%s", (title,))
         row = cur.fetchone()
 
