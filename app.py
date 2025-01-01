@@ -5,8 +5,8 @@ import json
 #from bson import json_util
 
 # Импортируем blueprint из api_costs
-# from api_costs import api_bp
-# from api_limits import api_limits_bp  # <-- Импортируем ваш новый Blueprint
+from api_costs import api_bp
+from api_limits import api_limits_bp  # <-- Импортируем ваш новый Blueprint
 
 from flask import (
     Flask,
@@ -102,8 +102,8 @@ print (mysql)
 #         mysql = MySQL(app)
 #         print("Используем MySQL.")
 # После создания объекта `app = Flask(__name__)` регистрируем Blueprint:
-# app.register_blueprint(api_bp, url_prefix='/api')
-# app.register_blueprint(api_limits_bp, url_prefix='/api')
+app.register_blueprint(api_bp, url_prefix='/api')
+app.register_blueprint(api_limits_bp, url_prefix='/api')
 
 
 
