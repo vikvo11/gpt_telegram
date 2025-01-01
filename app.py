@@ -33,7 +33,7 @@ from misck import token, chat_id_old
 # Подключаем нашу инициализацию
 import db_init  # модуль инициализации таблиц для SQLite
 import common_db  # <-- импортируем наш общий модуль
-from common_db import is_mysql, mysql
+# from common_db import is_mysql, mysql
 
 # ----------------------------------------------------
 # Для MySQL
@@ -87,11 +87,11 @@ is_mysql = (db_engine.lower() == 'mysql')
 if not is_mysql:
     print('SQL LITE')
     db_init.init_sqlite()
-else:
-    mysql = common_db.mysql
-    # cur = mysql.connection.cursor()
+# else:
+#     mysql = common_db.mysql
+#     # cur = mysql.connection.cursor()
 
-print (mysql)
+print (common_db.mysql)
 # if db_engine == "mysql": 
 #         app.config['MYSQL_HOST']='vorovik.mysql.pythonanywhere-services.com'
 #         app.config['MYSQL_USER']='vorovik'
@@ -263,7 +263,7 @@ def webhook_test():
                     send_message(chat_id, "\n".join(limmsg_final))
                 else:
                     # MySQL
-                    cur = mysql.connection.cursor()
+                    cur = common_db.mysqlconnection.cursor()
                     cur.execute("""
                         SELECT title, limits, cost 
                         FROM costs
@@ -302,7 +302,7 @@ def webhook_test():
                     send_message(chat_id, 'Общая потраченная сумма в этом месяце = '+str(Sum['summa']))
                 else:
                     # MySQL
-                    cur = mysql.connection.cursor()
+                    cur = common_db.mysqlconnection.cursor()
                     cur.execute("""
                         SELECT SUM(cost) as summa
                         FROM costs
@@ -356,7 +356,7 @@ def mysqls(table):
         return rows
     else:
         # MySQL
-        cur = mysql.connection.cursor()
+        cur = common_db.mysqlconnection.cursor()
         result = cur.execute(f"SELECT * FROM {table}")
         rows = cur.fetchall()
         cur.close()
@@ -378,7 +378,7 @@ def add_costs(table, title, cost):
         return 'ok'
     else:
         # MySQL
-        cur = mysql.connection.cursor()
+        cur = common_db.mysqlconnection.cursor()
         cur.execute(f"""
             INSERT INTO {table}(title, cost, year, month)
             VALUES (%s, %s, (Select Year(CURDATE())), (Select Month(CURDATE())))
@@ -490,7 +490,7 @@ def update_costs(table, title, cost):
 
     else:
         # ================== MySQL ===================
-        cur = mysql.connection.cursor()
+        cur = common_db.mysqlconnection.cursor()
 
         # Проверяем, есть ли уже строка за текущий год и месяц
         sql_check = f"""
