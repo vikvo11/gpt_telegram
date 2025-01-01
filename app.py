@@ -263,7 +263,7 @@ def webhook_test():
                     send_message(chat_id, "\n".join(limmsg_final))
                 else:
                     # MySQL
-                    cur = common_db.mysqlconnection.cursor()
+                    cur = common_db.mysql.connection.cursor()
                     cur.execute("""
                         SELECT title, limits, cost 
                         FROM costs
@@ -302,7 +302,7 @@ def webhook_test():
                     send_message(chat_id, 'Общая потраченная сумма в этом месяце = '+str(Sum['summa']))
                 else:
                     # MySQL
-                    cur = common_db.mysqlconnection.cursor()
+                    cur = common_db.mysql.connection.cursor()
                     cur.execute("""
                         SELECT SUM(cost) as summa
                         FROM costs
@@ -356,7 +356,7 @@ def mysqls(table):
         return rows
     else:
         # MySQL
-        cur = common_db.mysqlconnection.cursor()
+        cur = common_db.mysql.connection.cursor()
         result = cur.execute(f"SELECT * FROM {table}")
         rows = cur.fetchall()
         cur.close()
@@ -378,7 +378,7 @@ def add_costs(table, title, cost):
         return 'ok'
     else:
         # MySQL
-        cur = common_db.mysqlconnection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute(f"""
             INSERT INTO {table}(title, cost, year, month)
             VALUES (%s, %s, (Select Year(CURDATE())), (Select Month(CURDATE())))
@@ -490,7 +490,7 @@ def update_costs(table, title, cost):
 
     else:
         # ================== MySQL ===================
-        cur = common_db.mysqlconnection.cursor()
+        cur = common_db.mysql.connection.cursor()
 
         # Проверяем, есть ли уже строка за текущий год и месяц
         sql_check = f"""
