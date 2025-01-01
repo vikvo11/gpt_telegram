@@ -74,20 +74,24 @@ sslify = SSLify(app)
 db_engine = 'mysql'
 # db_engine = 'sqlite'
 # is_mysql = False
-# Проверяем, какой движок используемs
-# is_mysql = (db_engine.lower() == 'mysql')
+
 # ----------------------------------------------------
 
 # Инициализируем движок
 common_db.init_app(db_engine,app)
-
+# Проверяем, какой движок используемs
+is_mysql = (db_engine.lower() == 'mysql')
 
 # Если выбрали SQLite, создаём таблицы (если их нет)
-if not common_db.is_mysql:
-# if not is_mysql:
+# if not common_db.is_mysql:
+if not is_mysql:
     print('SQL LITE')
     db_init.init_sqlite()
+else:
+    mysql = common_db.mysql
+    # cur = mysql.connection.cursor()
 
+print (mysql)
 # if db_engine == "mysql": 
 #         app.config['MYSQL_HOST']='vorovik.mysql.pythonanywhere-services.com'
 #         app.config['MYSQL_USER']='vorovik'
