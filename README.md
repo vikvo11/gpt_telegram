@@ -66,3 +66,9 @@ curl -X POST \
      -H "Content-Type: application/json" \
      -d '{"title":"общий","limit_value":131907}' \
      "http://localhost:5005/api/limits"
+
+
+###
+curl -X GET \
+     -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
+     "http://vorovik.pythonanywhere.com/api/limits"
