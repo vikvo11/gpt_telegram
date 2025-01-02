@@ -1,7 +1,8 @@
 # api_costs.py
 
 from flask import Blueprint, request, jsonify
-from common_db import is_mysql, get_sqlite_conn, mysql
+# from common_db import is_mysql, get_sqlite_conn, mysql
+import common_db  # <-- импортируем наш общий модуль
 
 api_bp = Blueprint('api_bp', __name__)
 
@@ -68,7 +69,7 @@ def get_costs_by_year():
         conn.close()
     else:
         # MySQL
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM costs WHERE year = %s", (year,))
         rows = cur.fetchall()
         cur.close()
@@ -116,7 +117,7 @@ def get_costs_by_month():
         rows = cur.fetchall()
         conn.close()
     else:
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM costs WHERE year = %s AND month = %s", (year, month))
         rows = cur.fetchall()
         cur.close()

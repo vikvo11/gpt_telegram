@@ -7,7 +7,8 @@ from flask import Blueprint, request, jsonify
 #   mysql -> объект MySQL (или None)
 #   check_api_key() -> если вы хотите повторно использовать общую проверку API-ключа
 try:
-    from common_db import is_mysql, get_sqlite_conn, mysql
+    # from common_db import is_mysql, get_sqlite_conn, mysql
+    import common_db  # <-- импортируем наш общий модуль
 except ImportError:
     # или другой способ импорта, если у вас нет кольцевой зависимости
     pass
@@ -61,7 +62,7 @@ def calculate_limits_sum():
 
         conn.close()
     else:
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT COALESCE(SUM(limit_value),0) as sum_others FROM limit_dict WHERE title != %s", ("общий",))
         sum_others = cur.fetchone()["sum_others"]
 
@@ -99,7 +100,7 @@ def ensure_total_not_less_than(sum_others):
         conn.close()
 
     else:
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM limit_dict WHERE title=%s", ("общий",))
         row = cur.fetchone()
         if row:
@@ -108,7 +109,7 @@ def ensure_total_not_less_than(sum_others):
         else:
             cur.execute("INSERT INTO limit_dict (title, limit_value) VALUES (%s, %s)", ("общий", sum_others))
 
-        mysql.connection.commit()
+        common_db.mysql.connection.commit()
         cur.close()
 
 
@@ -132,7 +133,7 @@ def get_all_limits():
         rows = cur.fetchall()
         conn.close()
     else:
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM limit_dict")
         rows = cur.fetchall()
         cur.close()
@@ -230,7 +231,7 @@ def upsert_limit():
 
     else:
         # MySQL
-        cur = mysql.connection.cursor()
+        cur = common_db.mysql.connection.cursor()
         cur.execute("SELECT * FROM limit_dict WHERE title=%s", (title,))
         row = cur.fetchone()
 
@@ -238,7 +239,7 @@ def upsert_limit():
             cur.execute("UPDATE limit_dict SET limit_value=%s WHERE id=%s", (limit_value, row["id"]))
         else:
             cur.execute("INSERT INTO limit_dict (title, limit_value) VALUES (%s, %s)", (title, limit_value))
-        mysql.connection.commit()
+        common_db.mysql.connection.commit()
 
         # Аналогично, пересчёт
         sum_others, current_total = calculate_limits_sum()
