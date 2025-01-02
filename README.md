@@ -92,3 +92,10 @@ curl -X POST \
      -H "Content-Type: application/json" \
      -d '{"year":"2024","month":"01"}' \
      "http://vorovik.pythonanywhere.com/api/costs/month"
+
+
+curl -X POST \
+  -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
+  -H "Content-Type: application/json" \
+  -d '{"start_year": "2023", "start_month": "12", "end_year": "2024", "end_month": "02"}' \
+  https://vorovik.pythonanywhere.com/costs/range
