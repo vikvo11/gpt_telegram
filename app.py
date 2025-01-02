@@ -383,7 +383,7 @@ def add_costs(table, title, cost):
             INSERT INTO {table}(title, cost, year, month)
             VALUES (%s, %s, (Select Year(CURDATE())), (Select Month(CURDATE())))
         """, (title, cost))
-        mysql.connection.commit()
+        common_db.mysql.connection.commit()
         cur.close()
         return 'ok'
 
@@ -528,7 +528,7 @@ def update_costs(table, title, cost):
                       AND month=(SELECT MONTH(CURDATE()))
                 """, (cost, title))
 
-            mysql.connection.commit()
+            common_db.mysql.connection.commit()
             # Получаем обновлённую запись
             cur.execute(sql_check, (title,))
             updated_row = cur.fetchone()
@@ -546,7 +546,7 @@ def update_costs(table, title, cost):
                     VALUES (%s, %s, YEAR(CURDATE()), MONTH(CURDATE()))
                 """, (title, cost))
 
-            mysql.connection.commit()
+            common_db.mysql.connection.commit()
             cur.execute(sql_check, (title,))
             updated_row = cur.fetchone()
 

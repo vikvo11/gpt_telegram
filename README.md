@@ -72,3 +72,9 @@ curl -X POST \
 curl -X GET \
      -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
      "http://vorovik.pythonanywhere.com/api/limits"
+
+curl -X POST \
+     -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
+     -H "Content-Type: application/json" \
+     -d '{"year":"2024"}' \
+     "http://vorovik.pythonanywhere.com/api/costs/year"

@@ -1,0 +1,199 @@
+openapi: 3.1.0
+info:
+  title: Vorovik Cost Management
+  description: API для работы с расходами и лимитами (SQLite/MySQL).
+  version: 1.0.0
+servers:
+  - url: https://vorovik.pythonanywhere.com/api
+paths:
+  /costs/year:
+    post:
+      operationId: getCostsByYear
+      summary: Get costs by year
+      description: Возвращает список расходов за указанный год.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostYearRequest"
+      responses:
+        "200":
+          description: Список расходов за указанный год.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CostRecord"
+        "400":
+          description: Ошибка валидации входных данных (например, нет поля year).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /costs/month:
+    post:
+      operationId: getCostsByMonth
+      summary: Get costs by month
+      description: Возвращает список расходов за указанные год и месяц.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostMonthRequest"
+      responses:
+        "200":
+          description: Список расходов за указанный год и месяц.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CostRecord"
+        "400":
+          description: Ошибка валидации входных данных (например, отсутствуют поля year, month).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /limits:
+    get:
+      operationId: getAllLimits
+      summary: Get all limits
+      description: Возвращает список всех лимитов из таблицы limit_dict (включая «общий»).
+      responses:
+        "200":
+          description: Список лимитов.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LimitRecord"
+        "400":
+          description: Возможная ошибка (редко для GET, но может быть при некорректных заголовках).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: upsertLimit
+      summary: Upsert (add or update) a limit
+      description: |
+        Создаёт или обновляет запись в таблице limit_dict.  
+        Если `title != "общий"`, после обновления проверяется, чтобы «общий» лимит не стал меньше суммы остальных.    
+        Возвращает итоговый список лимитов после изменений.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LimitUpsertRequest"
+      responses:
+        "200":
+          description: Итоговый список лимитов после вставки/обновления.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LimitRecord"
+        "400":
+          description: Ошибка валидации входных данных (например, нет title или limit_value).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    CostYearRequest:
+      type: object
+      description: Параметры для получения расходов за год.
+      properties:
+        year:
+          type: string
+          description: Год, за который нужно вернуть расходы (например, "2025").
+      required:
+        - year
+    CostMonthRequest:
+      type: object
+      description: Параметры для получения расходов за конкретный год и месяц.
+      properties:
+        year:
+          type: string
+          description: Год (например, "2025").
+        month:
+          type: string
+          description: Месяц (двухзначный формат, например "01"..."12").
+      required:
+        - year
+        - month
+    CostRecord:
+      type: object
+      description: Одна запись из таблицы costs.
+      properties:
+        id:
+          type: integer
+          description: Уникальный идентификатор записи в таблице costs.
+        title:
+          type: string
+          description: Категория/название расходов (например, Food, Rent и т.д.).
+        cost:
+          type: integer
+          description: Числовое значение расходов.
+        year:
+          type: string
+          description: Год (строка, например "2025").
+        month:
+          type: string
+          description: Месяц (строка, например "01").
+        limits:
+          type: integer
+          description: Доп. поле (если используется), может быть null.
+      required:
+        - id
+        - title
+        - cost
+        - year
+        - month
+    LimitRecord:
+      type: object
+      description: Одна запись из таблицы limit_dict.
+      properties:
+        id:
+          type: integer
+          description: Уникальный идентификатор.
+        title:
+          type: string
+          description: Название лимита (например, "Groceries", "Rent", "общий").
+        limit_value:
+          type: integer
+          description: Числовое значение лимита.
+      required:
+        - id
+        - title
+        - limit_value
+    LimitUpsertRequest:
+      type: object
+      description: Тело запроса для добавления или обновления лимита в таблице limit_dict.
+      properties:
+        title:
+          type: string
+          description: Название лимита (например, "Groceries" или "общий").
+        limit_value:
+          type: integer
+          description: Новое значение лимита (неотрицательное).
+      required:
+        - title
+        - limit_value
+    ErrorResponse:
+      type: object
+      description: Структура ошибки.
+      properties:
+        error:
+          type: string
+          description: Текст ошибки.
+      required:
+        - error
