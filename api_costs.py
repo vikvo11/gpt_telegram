@@ -60,7 +60,7 @@ def get_costs_by_year():
     if not year:
         return jsonify({"error": "year is required"}), 400
 
-    if not is_mysql:
+    if not common_db.is_mysql:
         # SQLite
         conn = get_sqlite_conn()
         cur = conn.cursor()
@@ -76,7 +76,7 @@ def get_costs_by_year():
 
     data_list = []
     for row in rows:
-        if not is_mysql:
+        if not common_db.is_mysql:
             data_list.append(dict(row))  # sqlite3.Row -> dict
         else:
             data_list.append(row)        # MySQL DictCursor -> dict
@@ -110,7 +110,7 @@ def get_costs_by_month():
     if not (year and month):
         return jsonify({"error": "year, month are required"}), 400
 
-    if not is_mysql:
+    if not common_db.is_mysql:
         conn = get_sqlite_conn()
         cur = conn.cursor()
         cur.execute("SELECT * FROM costs WHERE year = ? AND month = ?", (year, month))
@@ -124,7 +124,7 @@ def get_costs_by_month():
 
     data_list = []
     for row in rows:
-        if not is_mysql:
+        if not common_db.is_mysql:
             data_list.append(dict(row))
         else:
             data_list.append(row)

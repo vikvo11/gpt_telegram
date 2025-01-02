@@ -48,7 +48,7 @@ def before_request_api():
 # Возвращает (sum_limits, общий_лимит)
 # -----------------------------------------------------------------------------
 def calculate_limits_sum():
-    if not is_mysql:
+    if not common_db.is_mysql:
         conn = get_sqlite_conn()
         cur = conn.cursor()
         # Сумма всех, где title != "общий"
@@ -82,7 +82,7 @@ def ensure_total_not_less_than(sum_others):
     то поднимаем его до sum_others.
     Если 'общий' не существует, создаём со значением sum_others.
     """
-    if not is_mysql:
+    if not common_db.is_mysql:
         conn = get_sqlite_conn()
         cur = conn.cursor()
         # Проверим, есть ли уже строка "общий"
@@ -126,7 +126,7 @@ def get_all_limits():
 
     Возвращает JSON со всеми лимитами (title, limit_value).
     """
-    if not is_mysql:
+    if not common_db.is_mysql:
         conn = get_sqlite_conn()
         cur = conn.cursor()
         cur.execute("SELECT * FROM limit_dict")
@@ -140,7 +140,7 @@ def get_all_limits():
 
     data = []
     for row in rows:
-        if not is_mysql:
+        if not common_db.is_mysql:
             data.append(dict(row))
         else:
             data.append(row)  # MySQL dictCursor -> dict
@@ -193,7 +193,7 @@ def upsert_limit():
         return jsonify({"error": "limit_value must be an integer"}), 400
 
     # Добавляем / обновляем запись
-    if not is_mysql:
+    if not common_db.is_mysql:
         conn = get_sqlite_conn()
         cur = conn.cursor()
 
@@ -257,7 +257,7 @@ def upsert_limit():
 
     # Собираем итоговый JSON
     data = []
-    if not is_mysql:
+    if not common_db.is_mysql:
         for r in rows:
             data.append(dict(r))
     else:
