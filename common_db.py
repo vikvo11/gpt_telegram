@@ -4,7 +4,7 @@ import sqlite3
 from flask_mysqldb import MySQL
 
 # По умолчанию используем SQLite
-is_mysql = None
+is_mysql = True
 mysql = None
 sqlite_db_path = 'mydatabase.db'
 
