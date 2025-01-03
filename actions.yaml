@@ -9,6 +9,7 @@ paths:
   /costs/year:
     post:
       operationId: getCostsByYear
+      x-openai-isConsequential: false
       summary: Get costs by year
       description: Возвращает список расходов за указанный год.
       requestBody:
@@ -35,6 +36,7 @@ paths:
   /costs/month:
     post:
       operationId: getCostsByMonth
+      x-openai-isConsequential: false
       summary: Get costs by month
       description: Возвращает список расходов за указанные год и месяц.
       requestBody:
@@ -58,9 +60,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /costs/range:
+    post:
+      operationId: getCostsByRange
+      x-openai-isConsequential: false
+      summary: Get costs over a range of months and years
+      description: >
+        Возвращает все расходы, которые попадают в заданный диапазон (start_year + start_month) до (end_year +
+        end_month).
+
+        Если `start_month` не указано, используется "01". Если `end_month` не указано, используется "12".
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CostRangeRequest"
+      responses:
+        "200":
+          description: Список расходов, попадающих в заданный диапазон.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CostRecord"
+        "400":
+          description: Ошибка валидации входных данных (например, отсутствует start_year/end_year).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /limits:
     get:
       operationId: getAllLimits
+      x-openai-isConsequential: false
       summary: Get all limits
       description: Возвращает список всех лимитов из таблицы limit_dict (включая «общий»).
       responses:
@@ -80,6 +114,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
       operationId: upsertLimit
+      x-openai-isConsequential: false
       summary: Upsert (add or update) a limit
       description: |
         Создаёт или обновляет запись в таблице limit_dict.  
@@ -102,6 +137,43 @@ paths:
                   $ref: "#/components/schemas/LimitRecord"
         "400":
           description: Ошибка валидации входных данных (например, нет title или limit_value).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /limits/{title}:
+    delete:
+      operationId: deleteLimit
+      x-openai-isConsequential: false
+      summary: Delete a limit (except the "общий" one)
+      description: |
+        Удаляет указанную категорию (title) из таблицы limit_dict, кроме главной "общий".
+        Если пользователь пытается удалить "общий", возвращается ошибка (403 или 400).
+        Возвращает итоговый список лимитов после удаления.
+      parameters:
+        - name: title
+          in: path
+          required: true
+          description: Название лимита для удаления.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Обновлённый список лимитов после удаления.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LimitRecord"
+        "403":
+          description: Нельзя удалить лимит "общий".
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Лимит не найден в таблице.
           content:
             application/json:
               schema:
@@ -130,6 +202,25 @@ components:
       required:
         - year
         - month
+    CostRangeRequest:
+      type: object
+      description: Параметры для получения расходов за диапазон год/месяц.
+      properties:
+        start_year:
+          type: string
+          description: Начальный год (например, "2024").
+        start_month:
+          type: string
+          description: Начальный месяц (опционально, по умолчанию "01").
+        end_year:
+          type: string
+          description: Конечный год (например, "2025").
+        end_month:
+          type: string
+          description: Конечный месяц (опционально, по умолчанию "12").
+      required:
+        - start_year
+        - end_year
     CostRecord:
       type: object
       description: Одна запись из таблицы costs.
