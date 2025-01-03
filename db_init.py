@@ -13,12 +13,12 @@ def init_sqlite():
     """
     Создаёт необходимые таблицы в SQLite, если их ещё нет.
     Затем вызывает fill_test_data() — он заполнит таблицы 
-    ТОЛЬКО в том случае, если они пусты.
+    ТОЛЬКО в том случае, если они пусты (costs, limit_dict).
     """
     conn = get_sqlite_conn()
     cur = conn.cursor()
 
-    # Пример таблицы costs
+    # 1) Таблица costs
     cur.execute("""
         CREATE TABLE IF NOT EXISTS costs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +30,7 @@ def init_sqlite():
         );
     """)
 
-    # Пример таблицы limit_dict
+    # 2) Таблица limit_dict
     cur.execute("""
         CREATE TABLE IF NOT EXISTS limit_dict (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,17 +39,67 @@ def init_sqlite():
         );
     """)
 
+    # ----------------------------------------------------------------
+    # 3) Новая таблица users (для создания пользователей)
+    # ----------------------------------------------------------------
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            email TEXT,
+            created_at TEXT
+        );
+    """)
+
+    # ----------------------------------------------------------------
+    # 4) Новая таблица main_goals (основные цели).
+    #    Связана с пользователем (user_id).
+    # ----------------------------------------------------------------
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS main_goals (
+            goal_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            goal_name TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (user_id)
+        );
+    """)
+
+    # ----------------------------------------------------------------
+    # 5) Новая таблица training_goals (для целей обучения).
+    #    Хранит user_id, goal_id (ссылка на main_goals), название цели (дубль),
+    #    время занятия, шаги обучения за день, тест, результат теста,
+    #    флаги выполнения, счётчик без пропущенных дней.
+    # ----------------------------------------------------------------
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS training_goals (
+            training_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            goal_id INTEGER,
+            goal_name TEXT,
+            study_time TEXT,       -- время занятия
+            daily_steps INTEGER,   -- шаги обучения на текущий день
+            test TEXT,             -- название теста (или описание)
+            test_result TEXT,      -- результат теста
+            daily_completed BOOLEAN, -- выполнено обучение за текущий день?
+            test_passed BOOLEAN,     -- сдан ли тест?
+            streak_count INTEGER,    -- счётчик без пропущенных дней
+            FOREIGN KEY (user_id) REFERENCES users (user_id),
+            FOREIGN KEY (goal_id) REFERENCES main_goals (goal_id)
+        );
+    """)
+
     conn.commit()
     conn.close()
     print("SQLite: Таблицы инициализированы (если их не было).")
     
+    # Заполнение тестовыми данными (только для costs/limit_dict)
     fill_test_data()
-
 
 def fill_test_data():
     """
     Заполняет таблицы costs и limit_dict тестовыми данными 
     ТОЛЬКО если они пусты.
+    (Если нужно — расширьте логику для заполнения users/main_goals/training_goals)
     """
     conn = get_sqlite_conn()
     cur = conn.cursor()
@@ -105,7 +155,6 @@ def fill_test_data():
     conn.commit()
     conn.close()
     print("SQLite: Заполнение тестовыми данными (при необходимости) завершено.")
-
 
 if __name__ == "__main__":
     init_sqlite()

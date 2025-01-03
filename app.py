@@ -7,6 +7,9 @@ import json
 # Импортируем blueprint из api_costs
 from api_costs import api_bp
 from api_limits import api_limits_bp  # <-- Импортируем ваш новый Blueprint
+from api_data import api_data_bp
+from api_delete import api_delete_bp
+
 
 from flask import (
     Flask,
@@ -104,8 +107,8 @@ print (common_db.mysql)
 # После создания объекта `app = Flask(__name__)` регистрируем Blueprint:
 app.register_blueprint(api_bp, url_prefix='/api')
 app.register_blueprint(api_limits_bp, url_prefix='/api')
-
-
+app.register_blueprint(api_data_bp, url_prefix='/api')
+app.register_blueprint(api_delete_bp, url_prefix='/api')
 
 
 global last_msg

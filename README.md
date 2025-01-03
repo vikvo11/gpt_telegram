@@ -99,3 +99,19 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -d '{"start_year": "2024", "start_month": "10", "end_year": "2025", "end_month": "01"}' \
   https://vorovik.pythonanywhere.com/api/costs/range
+
+###
+curl -X GET \
+     -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
+     "http://localhost:5005/api/users"
+
+curl -X POST \
+  -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "test", "email": "email@test"}' \
+  http://localhost:5005/api/users
+
+  curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{"table":"users","id_field":"user_id","id_value":1}' \
+     http://localhost:5005/api/delete_record
