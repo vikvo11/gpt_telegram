@@ -103,7 +103,7 @@ curl -X POST \
 ###
 curl -X GET \
      -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
-     "http://localhost:5005/api/users"
+     "https://vorovik.pythonanywhere.com/api/users"
 
 curl -X POST \
   -H "X-API-KEY: MY_SUPER_SECRET_KEY_123" \
