@@ -3,3 +3,4 @@ venv
 __pycache__
 misck.py
 common_db1.py
+*_tmp.md

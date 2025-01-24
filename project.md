@@ -1,1 +1,2 @@
+CloudIA
 We are developing a project for managing cloud infrastructure using AI. The system automates resource allocation, monitors performance, and predicts potential issues to ensure stability. With AI-driven insights, it optimizes costs and enhances scalability, making cloud operations more efficient and reliable
